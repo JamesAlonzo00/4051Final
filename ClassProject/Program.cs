@@ -223,25 +223,29 @@ namespace ClassProject
 
                 Console.Write("Enter pickup time: ");//prompts user for a pick up time
                 string pickupTime = Console.ReadLine();
+            Console.WriteLine(  );
+            Console.WriteLine();//extra spaces so terminal looks better
 
-                OrderConfirmation(authenticatedCustomer, pickupTime, shopperCart.cartItems);
-            }
+            OrderConfirmation(authenticatedCustomer, pickupTime, shopperCart.cartItems);//invokes method stated bellow this whihc shows what is in our order
+            Console.WriteLine( );
+            Console.WriteLine();
+        }
 
-            static void OrderConfirmation(Customer customer, string pickupTime, List<Item> cartItems)
+            static void OrderConfirmation(Customer customer, string pickupTime, List<Item> cartItems)//method that takes inputs of a customer object, string, and list
             {
                 if (customer != null)
                 {
-                    Console.WriteLine($"Order Confirmation for {customer.FirstName} {customer.LastName}:");
+                    Console.WriteLine($"Order Confirmation for {customer.FirstName} {customer.LastName}:");//prints the order confirmation with user info
                     Console.WriteLine($"Pickup Time: {pickupTime}");
                     Console.WriteLine("Items in Cart:");
                     foreach (var item in cartItems)
                     {
-                        Console.WriteLine($"- {item.ItemName} (${item.Price})");
+                        Console.WriteLine($"- {item.ItemName} (${item.Price})");//prints each item in the cart list
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Please log in to confirm the order.");
+                    Console.WriteLine("Please log in to confirm the order.");// only shows if user is not logged in
                 }
             }
         }

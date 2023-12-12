@@ -10,7 +10,7 @@ namespace ClassProject.Model
     {
         private static int autoIncreament;
         public int Id { get; set; }
-        public string Username { get; set; }
+        public string Username { get; set; }//properties are used to easily access customer info
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

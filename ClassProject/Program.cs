@@ -8,6 +8,8 @@ namespace ClassProject
         private static List<Appointment> appointments;
         private static List<CutomerAppointment> customerAppointments;
         private static Customer authenticatedCustomer;
+        private static Inventory inventory;
+        private static Cart cart;
 
         private static Customer customer;
         static void Main(string[] args)
@@ -33,9 +35,9 @@ namespace ClassProject
                 Username = "terence",
                 Password = "2345"
             };
-            var a1 = new Appointment();
-            var a2 = new Appointment();
-            var a3 = new Appointment();
+            var a1 = new Appointment { date = "4 pm"};
+            var a2 = new Appointment { date = "4:30 pm"};
+            var a3 = new Appointment { date = "1 pm"};
 
             var ca1 = new CutomerAppointment(c1, a1);
             var ca2 = new CutomerAppointment(c1, a2);
@@ -52,9 +54,16 @@ namespace ClassProject
 
             customerAppointments = new List<CutomerAppointment>();
             customerAppointments.Add(ca1);
-            customerAppointments.Add(ca2);
+            customerAppointments.Add(ca2);//did not use
             customerAppointments.Add(ca3);
 
+            // Initialize inventory
+            inventory = new Inventory();
+            Item milk = new Item("Milk", 2.99m, inventory);
+            Item bread = new Item("Bread", 1.99m, inventory);//all items have a name and price then they are stored in the inventory list
+            Item gum = new Item("Gum", 0.99m, inventory);
+            Item pizzaRolls = new Item("Pizza Rolls", 4.99m, inventory);
+            // Add more items as needed...
 
         }
 
@@ -64,7 +73,7 @@ namespace ClassProject
 
             while (!done)
             {
-                Console.WriteLine("Options: Login: 1 --- Logout: 2 --- Sign Up: 3 --- Appointments: 4 --- Clear Screen: c --- Quit: q ---");
+                Console.WriteLine("Options: Login: 1 --- Logout: 2 --- Sign Up: 3 --- Appointments: 4 --- Shopping Cart Menu: 5 --- Clear Screen: c --- Quit: q ---");
                 Console.Write("Choice: ");
                 string choice = Console.ReadLine();
                 switch(choice)
@@ -80,6 +89,16 @@ namespace ClassProject
                         break;
                     case "4":
                         GetCurrentAppointmentsMenu();
+                        break;
+                    case "5"://case 5 is for actual shopping -- user must sign in or up to use
+                        if (authenticatedCustomer == null)
+                        {
+                            Console.WriteLine("Please log in to start shopping.");
+                        }
+                        else
+                        {
+                            ShoppingCartMenu();// made with gpt 3.5 to list all available items and promtp you to select some
+                        }
                         break;
                     case "c":
                         Console.Clear();
@@ -177,8 +196,58 @@ namespace ClassProject
             }
         }
 
+        
+        
+            static void ShoppingCartMenu()// shopping class that allows you to select items
+            {
+                Cart shopperCart = new Cart();//declares a list to store selected items in later
 
+                string userInput;//string to use readline later -- stores the users selection
+                do
+                {
+                    Console.WriteLine("Available Items:");//do while loop that shows available items so that the user can choose
+                    List<Item> itemsInStock = inventory.GetItemsInStock();
+                    foreach (var item in itemsInStock)
+                    {
+                        Console.WriteLine($"- {item.ItemName} (${item.Price})"); //foreach loop that prints each item in the inventory list
+                    }
 
+                    Console.Write("Select an item to add to the cart (or 'done' to finish shopping): ");//promtps user to make a decision of selecting an item or to finalize the order
+                    userInput = Console.ReadLine();
 
+                    if (userInput.ToLower() != "done")
+                    {
+                        shopperCart.AddItemToCart(userInput, inventory);//adds selected item to cart list
+                    }
+                } while (userInput.ToLower() != "done");//ends item selection process
+
+                Console.Write("Enter pickup time: ");//prompts user for a pick up time
+                string pickupTime = Console.ReadLine();
+
+                OrderConfirmation(authenticatedCustomer, pickupTime, shopperCart.cartItems);
+            }
+
+            static void OrderConfirmation(Customer customer, string pickupTime, List<Item> cartItems)
+            {
+                if (customer != null)
+                {
+                    Console.WriteLine($"Order Confirmation for {customer.FirstName} {customer.LastName}:");
+                    Console.WriteLine($"Pickup Time: {pickupTime}");
+                    Console.WriteLine("Items in Cart:");
+                    foreach (var item in cartItems)
+                    {
+                        Console.WriteLine($"- {item.ItemName} (${item.Price})");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Please log in to confirm the order.");
+                }
+            }
+        }
     }
-}
+    
+
+
+
+

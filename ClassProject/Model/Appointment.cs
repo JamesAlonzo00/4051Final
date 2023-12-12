@@ -10,7 +10,7 @@ namespace ClassProject.Model
     {
         private static int autoIncreament;
         public int Id { get; set; }
-        public DateTime date { get; set; }
+        public string date { get; set; }
 
         public Appointment()
         {
